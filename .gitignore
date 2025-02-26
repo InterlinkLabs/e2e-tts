@@ -1,0 +1,11 @@
+*.wav
+*.pt
+__pycache__/
+.idea
+.flake8
+.vscode
+data/*
+exps/
+audio/
+audio_generated/
+testing_lib.py

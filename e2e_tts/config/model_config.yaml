@@ -1,0 +1,92 @@
+fastspeech2: ### FastSpeech 2: Fast and High-Quality End-to-End Text to Speech (Ren et al., 2020) ###
+  max_seq_len: 1000 # this is low limited and update when pre-processed dataset
+  encoder_layers: 6 # <- 4
+  encoder_hidden: 384 # <- 256
+  decoder_layers: 6
+  decoder_hidden: 384 # <- 256
+  building_block:
+    block_type: "transformer" # there are 5 types of encode ["transformer", "conformer", "fastformer", "lstransformer", "reformer"]
+    transformer: ### Attention Is All You Need (Vaswani et al., 2017) ###
+      encoder_head: 2
+      decoder_head: 2
+      conv_filter_size: 1024
+      conv_kernel_size: [9, 1]
+      encoder_dropout: 0.1 # <- 0.2
+      decoder_dropout: 0.1 # <- 0.2
+    conformer: ### Conformer: Convolution-augmented Transformer for Speech Recognition (Gulati et al., 2020) ###
+      encoder_head: 8
+      decoder_head: 8
+      ffn_expansion_factor: 4
+      conv_kernel_size: 31
+      conv_expansion_factor: 2
+      half_step_residual: True
+      encoder_dropout: 0.1
+      decoder_dropout: 0.1
+    fastformer: ### Fastformer: Additive Attention Can Be All You Need (Wu et al., 2021)) ###
+      encoder_head: 2
+      decoder_head: 2
+      conv_filter_size: 1024
+      conv_kernel_size: [9, 1]
+      encoder_dropout: 0.2
+      decoder_dropout: 0.2
+    lstransformer: ### Long-Short Transformer: Efficient Transformers for Language and Vision (Zhu et al., 2021) ###
+      encoder_head: 2
+      decoder_head: 2
+      conv_filter_size: 1024
+      conv_kernel_size: [9, 1]
+      encoder_dropout: 0.2
+      decoder_dropout: 0.2
+    reformer: ### Reformer: The Efficient Transformer (Kitaev et al., 2020) ###
+      encoder_head: 8
+      encoder_dropout: 0.2
+      decoder_head: 8
+      decoder_dropout: 0.2
+  variance: ### One TTS Alignment To Rule Them All (Badlani et al., 2021) ###
+    duration_modelling:
+      learn_alignment: True # switch between supervied or unsupervised learning
+      aligner_temperature: 0.0005
+      binarization_start_steps: 6000
+    variance_predictor:
+      predictor_grad: 0.1
+      filter_size: 256
+      kernel_size: 3
+      dropout: 0.5
+      # unsupervised
+      dur_predictor_layers: 2
+      dur_predictor_kernel: 3
+      pit_predictor_layers: 2
+      pit_predictor_kernel: 5
+      ener_predictor_layers: 2
+      ener_predictor_kernel: 5
+      ffn_padding: "SAME"
+      ffn_act: "gelu"
+    variance_embedding:
+      use_uv: True
+      n_bins: 256
+      pitch_feature: "phoneme_level" # support "phoneme_level" or "frame_level"
+      pitch_quantization: "linear" # support "linear" or "log"
+      energy_feature: "phoneme_level" # support "phoneme_level" or "frame_level"
+      energy_quantization: "linear" # support "linear" or "log"
+      f0_bins: 300
+  postnet:
+    embedding_dim: 512
+    conv_layers: 5
+    kernel_size: 5
+hifigan: ###  HiFi-GAN: Generative Adversarial Networks for Efficient and High Fidelity Speech Synthesis (Kong et al., 2020) ###
+  resblock: 1
+  num_freq: 1025
+  upsample_rates: [8, 8, 2, 2]
+  upsample_kernel_sizes: [16, 16, 4, 4]
+  upsample_initial_channel: 512
+  resblock_kernel_sizes: [3, 7, 11]
+  resblock_dilation_sizes: [[1, 3, 5], [1, 3, 5], [1, 3, 5]]
+istft: ### iSTFTNet : Fast and Lightweight Mel-spectrogram Vocoder Incorporating Inverse Short-time Fourier Transform (Kaneko et al., 2022) ###
+  resblock: 1
+  gen_istft_n_fft: 16
+  gen_istft_hop_size: 4
+  gen_istft_win_size: 16
+  upsample_rates: [8, 8]
+  upsample_kernel_sizes: [16, 16]
+  upsample_initial_channel: 512
+  resblock_kernel_sizes: [3, 7, 11]
+  resblock_dilation_sizes: [[1, 3, 5], [1, 3, 5], [1, 3, 5]]

@@ -1,0 +1,28 @@
+seed: 1234
+batch_size: 32
+log_step: 100
+grad_acc_step: 1
+grad_clip_thresh: 1.0
+load_mel_from_disk: True
+external_model: "fastspeech2"
+fastspeech2:
+  loss:
+    dur_loss_lambda: {"pdur": 1.0, "wdur": 1.0, "sdur": 1.0}
+    binarization_loss_warmup_steps: 10000
+    binarization_loss_enable_steps: 18000
+  optimizer:
+    learning_rate: 0.001
+    betas: [0.9, 0.98]
+    eps: 0.000000001
+    weight_decay: 0.0
+    grad_clip_thresh: 1.0
+    warm_up_step: 4000
+    anneal_steps: [300000, 400000, 500000]
+    anneal_rate: 0.3
+hifigan:
+  optimizer:
+    learning_rate: 0.0002
+    betas: [0.8, 0.99]
+    eps: 0.000000001
+    weight_decay: 0.999
+    grad_clip_thresh: 1.0
