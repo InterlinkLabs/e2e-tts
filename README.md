@@ -18,7 +18,7 @@ To get started with Interlink AI's TTS, clone the repository and install the req
 
 ```bash
 git clone https://github.com/InterlinkLabs/e2e-tts.git
-cd text-to-speech
+cd e2e-tts
 pip install -r requirements.txt
 ```
 
